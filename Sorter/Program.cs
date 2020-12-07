@@ -73,7 +73,8 @@ Sorter <filename> [<chunkSizeInMB>] [<mergeBufferSizeInKB>]
                     while (iterator.CanMove())
                     {
                         var item = heap.Pop();
-                        writer.WriteLine($"{item}");
+                        item.PrintItem(writer); // it need to do something with classes....
+                        //writer.WriteLine($"{item}");
 
                         item.Value = iterator.GetItem(item.Index);
                         if (item.Value != null)

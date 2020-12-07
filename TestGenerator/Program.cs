@@ -43,7 +43,24 @@ namespace TestGenerator
             {
                 sb.Append($" {_words[_rnd.Next(_wordsLen)]}");
             }
+            sb.Append(Environment.NewLine);
             return sb.ToString();
+        }
+
+        public void PrintRandomLine(StreamWriter writer)
+        {
+            
+            writer.Write(_rnd.Next(c_maxNumber));
+            writer.Write(". ");
+
+            var wordsCount = _rnd.Next(c_maxWordsInLine);
+            writer.Write(_startWords[_rnd.Next(_wordsLen)]);
+            for (byte wNumber = 1; wNumber < wordsCount; wNumber++)
+            {
+                writer.Write(" ");
+                writer.Write(_words[_rnd.Next(_wordsLen)]);
+            }
+            writer.Write(Environment.NewLine);
         }
     }
 
@@ -60,7 +77,6 @@ namespace TestGenerator
 @"
 Please use such command for start: 
 TestGenerator <NumberOfLines> <output>
-
 When NumberOfLines  equal 13000000, approximately  1GB file will be generated.
 @");
 
@@ -75,16 +91,16 @@ When NumberOfLines  equal 13000000, approximately  1GB file will be generated.
             {
                 for (long i = 0; i < nLines; i++)
                 {
-                    sw.WriteLine(generator.GetRandomLine());
+                    generator.PrintRandomLine(sw);
                     if (i % 1000000 == 0)
                     {
                         Console.WriteLine($"{i} lines were generated. It takes { timer.Elapsed.ToString(@"m\:ss\.fff")}");
                     }
                 }
             }
-
             timer.Stop();
             Console.WriteLine($"It takes {timer.Elapsed.ToString(@"m\:ss\.fff")}. Size : {((decimal)(new FileInfo(outputFile).Length)) / 1000000}MB.");
+            Console.ReadKey();
         }
     }
 }

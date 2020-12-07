@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -39,6 +40,19 @@ namespace Sorter
             var num = ArrayToLong(arr, len - 8);
             return $"{num}. {s}";
         }
+        public static void PrintLine(TextWriter wr, byte[] arr)
+        {
+            if (arr != null)
+            {
+                int len = arr.Length;
+                wr.Write(ArrayToLong(arr, len - 8));
+                wr.Write(". ");
+                wr.Write(ASCIIEncoding.ASCII.GetString(arr, 0, len - 8));
+                wr.Write(Environment.NewLine);
+            }
+        }
+
+        
     }
 }
 
