@@ -21,7 +21,7 @@ namespace Sorter
             {
                 _readers[i] = new SortBinaryReader(outFiles[i], memorySize);
                 _enumerators[i] = _readers[i].GetEnumerator();
-                _canMove[i] = _enumerators[i].MoveNext();
+                _canMove[i] = true;
             }
         }
 
