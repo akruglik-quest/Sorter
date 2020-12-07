@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace TestGenerator
 {
-    class Generator 
+    class Generator
     {
         const int c_maxWordsInLine = 20;
         const int c_maxNumber = Int16.MaxValue;
-        
+
         Random _rnd = new Random();
 
         string[] _words;
@@ -47,19 +47,29 @@ namespace TestGenerator
         }
     }
 
-   
+
 
     class Program
     {
-      
+
         static void Main(string[] args)
         {
-            var timer = new Stopwatch();
-            timer.Start();
+            if (args.Length != 2)
+            {
+                Console.WriteLine(
+@"
+Please use such command for start: 
+TestGenerator <NumberOfLines> <output>
 
+When NumberOfLines  equal 13000000, approximately  1GB file will be generated.
+@");
+
+            }
             long nLines = Int64.Parse(args[0]);
             var outputFile = args[1];
-            
+
+            var timer = new Stopwatch();
+            timer.Start();
             var generator = new Generator();
             using (var sw = new StreamWriter(outputFile, false, Encoding.Default, 65536))
             {
@@ -75,8 +85,6 @@ namespace TestGenerator
 
             timer.Stop();
             Console.WriteLine($"It takes {timer.Elapsed.ToString(@"m\:ss\.fff")}. Size : {((decimal)(new FileInfo(outputFile).Length)) / 1000000}MB.");
-            Console.ReadKey();
-
         }
     }
 }

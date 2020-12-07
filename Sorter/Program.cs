@@ -16,30 +16,44 @@ namespace Sorter
     {
         static (string InputFilename, int ChunkSize, int MemorySize, string OutputFilename)  ReadCmdLine(string[] args)
         {
-            var res = (InputFilename: args[0],
-                ChunkSize: args.Length > 1 ? Int32.Parse(args[1]) : 256,
-                MemorySize: args.Length > 2 ? Int32.Parse(args[2]) : 2048,
-                OutputFilename: $"{args[0]}_out");
-
-            if (!File.Exists(res.InputFilename))
+            try
             {
-                throw new Exception($"Sorry, the process was rejected. File '{res.InputFilename}' not found.");
+                var res = (InputFilename: args[0],
+                    ChunkSize: args.Length > 1 ? Int32.Parse(args[1]) : 256,
+                    MemorySize: args.Length > 2 ? Int32.Parse(args[2]) : 1024,
+                    OutputFilename: $"{args[0]}_out");
+
+                if (!File.Exists(res.InputFilename))
+                {
+                    throw new Exception($"Sorry, the process was rejected. File '{res.InputFilename}' not found.");
+                }
+
+                if (File.Exists(res.OutputFilename))
+                {
+                    Console.WriteLine($"Output file '{res.OutputFilename}' exists. Delete it [y/n]?");
+                    var str = Console.ReadLine();
+                    if (str.ToLower() == "y" || str.ToLower() == "yes")
+                    {
+                        File.Delete(res.OutputFilename);
+                    }
+                    else
+                    {
+                        throw new Exception($"Sorry, the process was rejected. Firstly please delete '{res.OutputFilename}'.");
+                    }
+                }
+                return res;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(
+@"
+Problems with arguments.
+
+Please use such command for start: 
+Sorter <filename> [<chunkSizeInMB>] [<mergeBufferSizeInKB>]
+", ex);
             }
 
-            if (File.Exists(res.OutputFilename))
-            {
-                Console.WriteLine($"Output file '{res.OutputFilename}' exists. Delete it [y/n]?");
-                var str = Console.ReadLine();
-                if (str.ToLower() == "y" || str.ToLower() == "yes")
-                {
-                    File.Delete(res.OutputFilename);
-                }
-                else
-                {
-                    throw new Exception($"Sorry, the process was rejected. Firstly please delete '{res.OutputFilename}'.");
-                }
-            }
-            return res;
         }
 
         private static void MergeFiles( List<string> outFiles, int memorySize, string outputFilename)
